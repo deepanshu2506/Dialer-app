@@ -1,0 +1,17 @@
+{
+  "name": "ContactsApp",
+  "displayName": "ContactsApp",
+  "expo": {
+    "name": "ContactsApp",
+    "slug": "ContactsApp",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
