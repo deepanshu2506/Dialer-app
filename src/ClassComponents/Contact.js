@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   Avatar: {
     marginRight: 20,
-    backgroundColor: "#1d6ccc",
+    backgroundColor: primaryColor,
   },
   nameText: {
     fontSize: 18,

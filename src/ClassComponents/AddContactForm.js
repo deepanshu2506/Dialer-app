@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { TextInput, Button, HelperText } from "react-native-paper";
 
+import { primaryColor } from "../../AppStyles";
+
 export default class AddContactForm extends React.Component {
   state = {
     firstName: "",
@@ -70,7 +72,7 @@ export default class AddContactForm extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior="height" style={styles.form}>
+      <View style={styles.form}>
         <View
           style={[
             styles.header,
@@ -79,7 +81,7 @@ export default class AddContactForm extends React.Component {
         >
           <Text style={styles.headerText}>Add Contact</Text>
         </View>
-        <KeyboardAvoidingView behavior="height">
+        <View>
           <TextInput
             style={styles.textInput}
             error={this.state.errors.firstName}
@@ -122,11 +124,11 @@ export default class AddContactForm extends React.Component {
           <HelperText type="error" visible={this.state.errors.firstName}>
             Not a valid phone Number
           </HelperText>
-        </KeyboardAvoidingView>
+        </View>
         <View style={styles.buttonPane}>
           <Button
-            color="#1d6ccc"
-            // labelStyle={{ color: "#1d6ccc" }}
+            color={primaryColor}
+            // labelStyle={{ color: primaryColor }}
             mode="outlined"
             contentStyle={[styles.button]}
             onPress={this.props.cancel}
@@ -137,7 +139,7 @@ export default class AddContactForm extends React.Component {
             <Button
               //   disabled={!this.state.canSubmit}
               mode="contained"
-              contentStyle={[styles.button, { backgroundColor: "#1d6ccc" }]}
+              contentStyle={[styles.button, { backgroundColor: primaryColor }]}
               onPress={this.handleSubmit}
             >
               Save
@@ -145,8 +147,8 @@ export default class AddContactForm extends React.Component {
           ) : (
             <Button
               disabled={true}
-              color="#1d6ccc"
-              // labelStyle={{ color: "#1d6ccc" }}
+              color={primaryColor}
+              // labelStyle={{ color: primaryColor }}
               mode="outlined"
               contentStyle={[styles.button]}
               onPress={this.props.cancel}
@@ -155,7 +157,7 @@ export default class AddContactForm extends React.Component {
             </Button>
           )}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
     height: 150,
     justifyContent: "flex-end",
     paddingBottom: 30,
-    backgroundColor: "#1d6ccc",
+    backgroundColor: primaryColor,
     marginBottom: 20,
   },
   headerMinimized: {

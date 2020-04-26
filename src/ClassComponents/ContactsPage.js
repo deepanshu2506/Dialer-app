@@ -5,6 +5,7 @@ import { FAB } from "react-native-paper";
 import contactsList from "../utils/Contacts";
 import Contact from "./Contact";
 import AddContactForm from "./AddContactForm";
+import { primaryColor } from "../../AppStyles";
 
 const SectionHeader = (props) => {
   const sectionHeaderStyles = StyleSheet.create({
@@ -12,7 +13,7 @@ const SectionHeader = (props) => {
       fontSize: 22,
       fontWeight: "bold",
       paddingLeft: 20,
-      color: "#1d6ccc",
+      color: primaryColor,
     },
     sectionHeader: {
       borderBottomColor: "#aaa",
@@ -135,6 +136,6 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 5,
     bottom: 30,
-    backgroundColor: "#1d6ccc",
+    backgroundColor: primaryColor,
   },
 });
