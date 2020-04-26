@@ -2,11 +2,11 @@ import React from "react";
 import { View } from "react-native";
 import { Button, BottomNavigation, Text } from "react-native-paper";
 import ContactsPage from "./src/ClassComponents/ContactsPage";
-import Contact from "./src/ClassComponents/Contact";
+import DialerPage from "./src/ClassComponents/DialerPage";
 
 const ContactsRoute = () => <ContactsPage />;
 const callLogRoute = () => <Text>Call Logs page</Text>;
-const PhoneScreenRoute = () => <Text>Phone Screen Route</Text>;
+const PhoneScreenRoute = () => <DialerPage />;
 
 export default class App extends React.Component {
   state = {

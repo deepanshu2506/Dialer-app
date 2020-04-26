@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Avatar } from "react-native-paper";
 
+import { primaryColor } from "../../AppStyles";
+
 export default class Contact extends React.Component {
   state = { expanded: false };
   render() {
