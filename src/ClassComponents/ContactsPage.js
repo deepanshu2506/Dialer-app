@@ -1,8 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View, SectionList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SectionList,
+  PermissionsAndroid,
+} from "react-native";
 import { FAB } from "react-native-paper";
+// import Contacts from "react-native-contacts";
+import * as Contacts from "expo-contacts";
 
-import contactsList from "../utils/Contacts";
+// import contactsList from "../utils/Contacts";
 import Contact from "./Contact";
 import AddContactForm from "./AddContactForm";
 import { primaryColor } from "../../AppStyles";
@@ -32,12 +40,18 @@ const SectionHeader = (props) => {
 export default class ContactsPage extends React.Component {
   state = {
     showAddContactsForm: false,
-    contacts: contactsList,
+    contacts: [],
   };
   constructor(props) {
     super(props);
-    contactsList.sort((a, b) => a.name > b.name);
-    const data = contactsList.reduce((obj, contact) => {
+  }
+
+  divide = () => {
+    let contacts = this.state.contacts;
+    contacts = contacts.sort((a, b) =>
+      a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+    );
+    const data = contacts.reduce((obj, contact) => {
       const firstLetter = contact.name[0].toUpperCase();
       return {
         ...obj,
@@ -45,9 +59,31 @@ export default class ContactsPage extends React.Component {
       };
     }, {});
 
-    this.sections = Object.keys(data)
+    const sections = Object.keys(data)
       .sort()
       .map((letter) => ({ title: letter, data: data[letter] }));
+    this.setState({ sections: [...sections] });
+  };
+
+  async componentDidMount() {
+    const { status } = await Contacts.requestPermissionsAsync();
+    if (status === "granted") {
+      const { data } = await Contacts.getContactsAsync();
+      const contactsList = data.map((contact) => ({
+        id: contact.id,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        namePrefix: contact.namePrefix,
+        name: `${contact.firstName && contact.firstName} ${
+          contact.lastName && contact.lastName
+        }`,
+        phoneNumbers: contact.phoneNumbers,
+        company: contact.company,
+        key: contact.id,
+      }));
+      console.log(Object.keys(data[0]));
+      this.setState({ contacts: contactsList }, this.divide);
+    }
   }
 
   renderItem = ({ item }) => <Contact {...item} />;
@@ -70,32 +106,16 @@ export default class ContactsPage extends React.Component {
   handleAddContact = (contact) => {
     this.hideAddContactsForm();
     //   console.log(contact);
-    const firstLetter = contact.firstName[0].toUpperCase();
-    const contactObj = {
-      name: `${contact.firstName} ${contact.lastName}`,
-      phone: contact.phone,
-      key: contactsList.length,
-    };
-    const sectionIndex = this.sections.findIndex(
-      (section) => section.title == firstLetter
-    );
-    if (sectionIndex > -1) {
-      this.sections[sectionIndex].data = [
-        ...this.sections[sectionIndex].data,
-        contactObj,
-      ];
-      this.sections[sectionIndex].data.sort((a, b) => {
-        console.log(`${a.name} ${b.name} ${a.name > b.name}`);
-        return a.name > b.name;
-      });
-      this.sections[sectionIndex].data.map((data) => console.log(data));
-    } else {
-      this.sections = [
-        ...this.sections,
-        { title: firstLetter, data: [contactObj] },
-      ];
-      this.sections.sort((a, b) => a.title > b.title);
-    }
+    this.setState((prevState) => {
+      const contactObj = {
+        name: `${contact.firstName} ${contact.lastName}`,
+        phone: contact.phone,
+        key: this.state.contacts.length,
+      };
+      return {
+        contacts: [...prevState.contacts, contactObj],
+      };
+    }, this.divide);
   };
 
   render() {
@@ -113,7 +133,7 @@ export default class ContactsPage extends React.Component {
                 paddingHorizontal: 10,
                 marginBottom: 0,
               }}
-              sections={this.sections}
+              sections={this.state.sections}
               renderItem={this.renderItem}
               renderSectionHeader={this.renderSectionHeader}
             />
