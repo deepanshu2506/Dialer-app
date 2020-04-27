@@ -108,6 +108,8 @@ export default class ContactsPage extends React.Component {
     //   console.log(contact);
     this.setState((prevState) => {
       const contactObj = {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
         name: `${contact.firstName} ${contact.lastName}`,
         phone: contact.phone,
         key: this.state.contacts.length,
