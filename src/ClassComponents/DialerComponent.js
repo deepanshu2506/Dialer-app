@@ -5,14 +5,16 @@ import {
   TouchableNativeFeedback,
   StyleSheet,
   LayoutAnimation,
+  NativeModules,
 } from "react-native";
 import { IconButton, FAB } from "react-native-paper";
 import { primaryColor } from "../../AppStyles";
+import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 
 export default class DialerComponent extends React.Component {
   state = {
     phone: "",
-    dualSim: true,
+    // dualSim: true,
     displayNumber: true,
   };
 
@@ -52,6 +54,11 @@ export default class DialerComponent extends React.Component {
     return true;
   };
 
+  makeCall = () => {
+    console.log(this.state.phone);
+    RNImmediatePhoneCall.immediatePhoneCall(this.state.phone);
+  };
+
   render() {
     return (
       <View style={[styles.backgroundView, this.props.style]}>
@@ -82,12 +89,13 @@ export default class DialerComponent extends React.Component {
           <FAB
             small
             color="white"
-            label="SIM 1"
+            label="CALL"
             style={[
               styles.callButtonStyle,
               this.state.dualSim && styles.leftCallButton,
             ]}
             icon="phone"
+            onPress={this.makeCall}
           />
 
           {this.state.dualSim && (
