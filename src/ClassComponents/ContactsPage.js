@@ -1,49 +1,30 @@
 import React from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  SectionList,
-  PermissionsAndroid,
-} from "react-native";
+import { StyleSheet, Text, View, PermissionsAndroid } from "react-native";
 import { FAB } from "react-native-paper";
 // import Contacts from "react-native-contacts";
-import * as Contacts from "expo-contacts";
 
-// import contactsList from "../utils/Contacts";
-import Contact from "./Contact";
-import AddContactForm from "./AddContactForm";
 import { primaryColor } from "../../AppStyles";
 
-const SectionHeader = (props) => {
-  const sectionHeaderStyles = StyleSheet.create({
-    sectionHeaderText: {
-      fontSize: 22,
-      fontWeight: "bold",
-      paddingLeft: 20,
-      color: primaryColor,
-    },
-    sectionHeader: {
-      borderBottomColor: "#aaa",
-      borderBottomWidth: 1,
-      marginBottom: 4,
-      //   padding: 10,
-    },
-  });
-  return (
-    <View style={sectionHeaderStyles.sectionHeader}>
-      <Text style={sectionHeaderStyles.sectionHeaderText}>{props.title}</Text>
-    </View>
-  );
-};
+import AddContactForm from "./AddContactForm";
+import PermissionError from "../stateLessComponents/ContactPermissionError";
+import ContactsList from "../stateLessComponents/ContactsList";
+
+import ContactStore from "../utils/ContactsStore";
 
 export default class ContactsPage extends React.Component {
-  state = {
-    showAddContactsForm: false,
-    contacts: [],
-  };
   constructor(props) {
     super(props);
+    const readPermission =
+      this.props.permissions["android.permission.READ_CONTACTS"] == "granted"
+        ? true
+        : false;
+
+    const writePermission =
+      this.props.permissions["android.permission.WRITE_CONTACTS"] == "granted";
+    this.state = {
+      showAddContactsForm: false,
+      permissions: { readPermission, writePermission },
+    };
   }
 
   divide = () => {
@@ -66,31 +47,8 @@ export default class ContactsPage extends React.Component {
   };
 
   async componentDidMount() {
-    const { status } = await Contacts.requestPermissionsAsync();
-    if (status === "granted") {
-      const { data } = await Contacts.getContactsAsync();
-      const contactsList = data.map((contact) => ({
-        id: contact.id,
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        namePrefix: contact.namePrefix,
-        name: `${contact.firstName && contact.firstName} ${
-          contact.lastName && contact.lastName
-        }`,
-        phoneNumbers: contact.phoneNumbers,
-        company: contact.company,
-        key: contact.id,
-      }));
-      console.log(Object.keys(data[0]));
-      this.setState({ contacts: contactsList }, this.divide);
-    }
+    this.setState({ contacts: ContactStore.getContacts() }, this.divide);
   }
-
-  renderItem = ({ item }) => <Contact {...item} />;
-
-  renderSectionHeader = ({ section: { title } }) => (
-    <SectionHeader title={title} />
-  );
 
   showAddContactsForm = () => {
     this.setState((prevState) => ({
@@ -105,22 +63,16 @@ export default class ContactsPage extends React.Component {
 
   handleAddContact = (contact) => {
     this.hideAddContactsForm();
-    //   console.log(contact);
-    this.setState((prevState) => {
-      const contactObj = {
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        name: `${contact.firstName} ${contact.lastName}`,
-        phone: contact.phone,
-        key: this.state.contacts.length,
-      };
-      return {
-        contacts: [...prevState.contacts, contactObj],
-      };
-    }, this.divide);
+    const contacts = ContactStore.addContact(contact);
+    console.log(contacts);
+    this.setState({ contacts }, this.divide);
+  };
+  search = (query) => {
+    this.setState({ contacts: ContactStore.searchContact(query) }, this.divide);
   };
 
   render() {
+    // console.log(this.state.contacts.length);
     return (
       <View>
         {this.state.showAddContactsForm ? (
@@ -129,18 +81,23 @@ export default class ContactsPage extends React.Component {
             save={this.handleAddContact}
           />
         ) : (
-          <View style={{ height: "100%", marginTop: 10 }}>
-            <SectionList
-              style={{
-                paddingHorizontal: 10,
-                marginBottom: 0,
-              }}
-              sections={this.state.sections}
-              renderItem={this.renderItem}
-              renderSectionHeader={this.renderSectionHeader}
-            />
+          <View style={{ height: "100%", marginTop: 0 }}>
+            {this.state.permissions.readPermission ? (
+              <ContactsList
+                sections={this.state.sections}
+                search={this.search}
+              />
+            ) : (
+              <PermissionError />
+            )}
             <FAB
-              style={styles.fab}
+              style={[
+                styles.fab,
+                this.state.permissions.writePermission
+                  ? styles.fabEnabled
+                  : styles.fabDisabled,
+              ]}
+              disabled={!this.state.permissions.writePermission}
               icon="plus"
               onPress={this.showAddContactsForm}
             />
@@ -158,6 +115,12 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 5,
     bottom: 30,
-    backgroundColor: primaryColor,
+  },
+  fabEnabled: { backgroundColor: primaryColor },
+  fabDisabled: {
+    backgroundColor: "white",
+    color: "black",
+    borderColor: "#aaa",
+    borderWidth: 1,
   },
 });
