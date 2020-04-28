@@ -55,7 +55,6 @@ export default class DialerComponent extends React.Component {
   };
 
   makeCall = () => {
-    console.log(this.state.phone);
     RNImmediatePhoneCall.immediatePhoneCall(this.state.phone);
   };
 
