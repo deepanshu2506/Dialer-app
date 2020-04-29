@@ -18,6 +18,12 @@ export default class DialerComponent extends React.Component {
     displayNumber: true,
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.phone != prevState.phone) {
+      this.props.search(this.state.phone);
+    }
+  }
+
   _backspacePress = () => {
     this.setState((prevState) => {
       if (prevState.phone.length > 0) {

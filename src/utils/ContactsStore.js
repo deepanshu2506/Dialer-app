@@ -19,10 +19,6 @@ class ContactsStore {
       company: contact.company,
       key: contact.id,
     }));
-    contactsList.map(
-      (contact) =>
-        contact.firstName == "ABB" && console.log(contact.phoneNumbers)
-    );
     this.contacts = [...contactsList];
   }
 
@@ -51,6 +47,7 @@ class ContactsStore {
   }
 
   searchContact(queryString) {
+    console.log(this.contacts);
     if (queryString.trim() == "") {
       return this.contacts;
     }
@@ -83,6 +80,30 @@ class ContactsStore {
       ) {
         return true;
       }
+    });
+  }
+
+  searchContactByPhoneNumber(searchPhone) {
+    if (searchPhone.trim() == "") {
+      return [];
+    }
+    const pattern = /\+[0-9]{1,3}/gi;
+    return this.contacts.filter((contact) => {
+      const { phoneNumbers } = contact;
+      let searchPhoneNumbers = [];
+      for (let phone of phoneNumbers) {
+        if (typeof phone != undefined) {
+          let text = phone.number
+            .replace(pattern, "")
+            .trim()
+            .split(" ")
+            .join("");
+          if (text.startsWith(searchPhone)) {
+            searchPhoneNumbers.push(phone);
+          }
+        }
+      }
+      if (searchPhoneNumbers.length > 0) return true;
     });
   }
 }
