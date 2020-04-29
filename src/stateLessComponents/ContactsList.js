@@ -1,10 +1,17 @@
 import React from "react";
 
-import { SectionList, View, StyleSheet, Text } from "react-native";
+import {
+  SectionList,
+  View,
+  StyleSheet,
+  Text,
+  LayoutAnimation,
+} from "react-native";
 import { Searchbar } from "react-native-paper";
 
 import Contact from "../ClassComponents/Contact";
 import { primaryColor } from "../../AppStyles";
+import NoContacts from "./ContactPermissionError";
 
 const renderItem = ({ item }) => <Contact {...item} />;
 
@@ -45,15 +52,20 @@ const contactsList = (props) => {
         }}
         placeholder="search Contacts"
       />
-      <SectionList
-        style={{
-          paddingHorizontal: 10,
-          marginBottom: 0,
-        }}
-        sections={props.sections}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-      />
+
+      {props.sections && props.sections.length > 0 ? (
+        <SectionList
+          style={{
+            paddingHorizontal: 10,
+            marginBottom: 0,
+          }}
+          sections={props.sections}
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
+        />
+      ) : (
+        <NoContacts />
+      )}
     </View>
   );
 };

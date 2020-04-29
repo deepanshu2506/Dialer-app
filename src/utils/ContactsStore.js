@@ -47,7 +47,6 @@ class ContactsStore {
   }
 
   searchContact(queryString) {
-    console.log(this.contacts);
     if (queryString.trim() == "") {
       return this.contacts;
     }

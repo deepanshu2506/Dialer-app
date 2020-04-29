@@ -5,7 +5,13 @@ import settingsIcon from "../static/icons/settings.png";
 
 const ContactPermissionError = (props) => {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Image style={styles.image} source={settingsIcon} />
       <Headline
         style={{
