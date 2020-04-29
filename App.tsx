@@ -53,6 +53,7 @@ export default class App extends React.Component {
           if (result["android.permission.READ_CONTACTS"] == "granted") {
             ContactStore.init();
           }
+          this.setState({ index: 1 });
         })
         .catch((err) => {
           console.log(err);

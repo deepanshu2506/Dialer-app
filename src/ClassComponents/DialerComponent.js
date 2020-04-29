@@ -15,7 +15,7 @@ export default class DialerComponent extends React.Component {
   state = {
     phone: "",
     // dualSim: true,
-    displayNumber: true,
+    displayNumber: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -43,12 +43,14 @@ export default class DialerComponent extends React.Component {
   };
 
   toggleInputField = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (!this.state.displayNumber && this.state.phone.length > 0) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       this.setState({ displayNumber: true });
     }
 
     if (this.state.displayNumber && this.state.phone.length == 0) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       this.setState({ displayNumber: false });
     }
   };
@@ -120,6 +122,10 @@ export default class DialerComponent extends React.Component {
             size={35}
             color={primaryColor}
             icon="chevron-down-circle-outline"
+            onPress={() => {
+              console.log("pressed");
+              this.props.pushDownDialer();
+            }}
           />
         </View>
       </View>
