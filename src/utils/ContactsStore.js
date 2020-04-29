@@ -19,6 +19,10 @@ class ContactsStore {
       company: contact.company,
       key: contact.id,
     }));
+    contactsList.map(
+      (contact) =>
+        contact.firstName == "ABB" && console.log(contact.phoneNumbers)
+    );
     this.contacts = [...contactsList];
   }
 
@@ -30,7 +34,7 @@ class ContactsStore {
     const contactObjSave = {
       [Contacts.Fields.FirstName]: contact.firstName,
       [Contacts.Fields.LastName]: contact.lastName,
-      [Contacts.Fields.PhoneNumbers]: contact.phone,
+      phoneNumbers: [{ label: "mobile", number: contact.phone }],
     };
     const contactId = await Contacts.addContactAsync(contactObjSave);
     const contactObj = {
@@ -39,7 +43,7 @@ class ContactsStore {
       firstName: contact.firstName,
       lastName: contact.lastName,
       name: `${contact.firstName} ${contact.lastName}`,
-      phone: contact.phone,
+      phoneNumbers: contact.phone,
     };
 
     this.contacts = [...this.contacts, contactObj];

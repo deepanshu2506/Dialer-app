@@ -61,10 +61,10 @@ export default class ContactsPage extends React.Component {
     }));
   };
 
-  handleAddContact = (contact) => {
+  handleAddContact = async (contact) => {
     this.hideAddContactsForm();
-    const contacts = ContactStore.addContact(contact);
-    console.log(contacts);
+    const contacts = await ContactStore.addContact(contact);
+    // console.log(contacts);
     this.setState({ contacts }, this.divide);
   };
   search = (query) => {
