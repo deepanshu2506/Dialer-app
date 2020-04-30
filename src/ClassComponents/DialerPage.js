@@ -12,6 +12,7 @@ import Dialer from "./DialerComponent";
 import ContactStore from "../utils/ContactsStore";
 import Contact from "./Contact";
 import { primaryColor } from "../../AppStyles";
+import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 
 export default class DialerComponent extends React.Component {
   state = {
@@ -32,6 +33,10 @@ export default class DialerComponent extends React.Component {
       });
     }
   }
+
+  callFromSuggestion = ({ phoneNumbers }) => {
+    RNImmediatePhoneCall.immediatePhoneCall(phoneNumbers[0].number);
+  };
   search = (phoneNumber) => {
     const contacts = ContactStore.searchContactByPhoneNumber(phoneNumber);
     contacts.sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
@@ -68,7 +73,9 @@ export default class DialerComponent extends React.Component {
         </Portal>
         <FlatList
           data={this.state.contacts}
-          renderItem={({ item }) => <Contact {...item} />}
+          renderItem={({ item }) => (
+            <Contact {...item} onPress={this.callFromSuggestion} />
+          )}
         />
         <FAB
           style={[styles.fab, !this.state.hideDialer && styles.fabClose]}
