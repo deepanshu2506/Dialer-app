@@ -1,11 +1,18 @@
 import React from "react";
-import { StyleSheet, Text, View, PermissionsAndroid } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  PermissionsAndroid,
+  BackHandler,
+} from "react-native";
 import { FAB } from "react-native-paper";
 // import Contacts from "react-native-contacts";
 
 import { primaryColor } from "../../AppStyles";
 
 import AddContactForm from "./AddContactForm";
+import ContactDetails from "./contactDetailsScreen";
 import PermissionError from "../stateLessComponents/ContactPermissionError";
 import ContactsList from "../stateLessComponents/ContactsList";
 
@@ -24,6 +31,8 @@ export default class ContactsPage extends React.Component {
     this.state = {
       showAddContactsForm: false,
       permissions: { readPermission, writePermission },
+      contactScreenOpen: false,
+      currentContact: {},
     };
   }
 
@@ -48,6 +57,7 @@ export default class ContactsPage extends React.Component {
 
   async componentDidMount() {
     this.setState({ contacts: ContactStore.getContacts() }, this.divide);
+    BackHandler.addEventListener("hardwareBackPress", this.closeContactPage);
   }
 
   showAddContactsForm = () => {
@@ -71,11 +81,29 @@ export default class ContactsPage extends React.Component {
     this.setState({ contacts: ContactStore.searchContact(query) }, this.divide);
   };
 
+  openContactPage = (contact) => {
+    this.setState({ contactScreenOpen: true, currentContact: contact });
+  };
+
+  closeContactPage = () => {
+    this.setState((prevState) => {
+      if (prevState.contactScreenOpen) {
+        return {
+          contactScreenOpen: false,
+          contacts: ContactStore.getContacts(),
+        };
+      }
+    }, this.divide);
+    return true;
+  };
+
   render() {
     // console.log(this.state.contacts.length);
     return (
       <View>
-        {this.state.showAddContactsForm ? (
+        {this.state.contactScreenOpen ? (
+          <ContactDetails {...this.state.currentContact} />
+        ) : this.state.showAddContactsForm ? (
           <AddContactForm
             cancel={this.hideAddContactsForm}
             save={this.handleAddContact}
@@ -86,6 +114,7 @@ export default class ContactsPage extends React.Component {
               <ContactsList
                 sections={this.state.sections}
                 search={this.search}
+                onContactPress={this.openContactPage}
               />
             ) : (
               <PermissionError />

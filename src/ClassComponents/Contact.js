@@ -36,7 +36,11 @@ export default class Contact extends React.Component {
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.Ripple("#aaa")}
           onPress={() => {
-            console.log(this.props);
+            this.props.onPress({
+              ...this.props,
+              name: this.state.name,
+              avatarText: this.state.avatarText,
+            });
           }}
         >
           <View style={styles.touchable}>

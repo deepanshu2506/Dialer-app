@@ -13,8 +13,6 @@ import Contact from "../ClassComponents/Contact";
 import { primaryColor } from "../../AppStyles";
 import NoContacts from "./ContactPermissionError";
 
-const renderItem = ({ item }) => <Contact {...item} />;
-
 const renderSectionHeader = ({ section: { title } }) => (
   <SectionHeader title={title} />
 );
@@ -42,6 +40,9 @@ const SectionHeader = (props) => {
 };
 
 const contactsList = (props) => {
+  const renderItem = ({ item }) => (
+    <Contact {...item} onPress={props.onContactPress} />
+  );
   return (
     <View>
       <Searchbar
