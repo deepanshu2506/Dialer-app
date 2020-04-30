@@ -6,12 +6,36 @@ import {
   TouchableNativeFeedback,
   ScrollView,
 } from "react-native";
-import { Surface } from "react-native-paper";
+import { Surface, Portal, Dialog } from "react-native-paper";
 import { MaterialCommunityIcons, Feather } from "react-native-vector-icons";
+import RNImmediatePhoneCall from "react-native-immediate-phone-call";
 
 import { primaryColor } from "../../AppStyles";
 
 export default class ContactDetails extends React.Component {
+  state = {
+    dialogVisible: false,
+  };
+
+  makeCall = (number) => {
+    RNImmediatePhoneCall.immediatePhoneCall(number);
+    if (this.state.dialogVisible) {
+      this._hideDialog();
+    }
+  };
+
+  decideCaller = () => {
+    if (this.props.phoneNumbers.length == 1) {
+      this.makeCall(this.props.phoneNumbers[0].number);
+    } else {
+      this.setState({ dialogVisible: true });
+    }
+  };
+
+  _hideDialog = () => {
+    this.setState({ dialogVisible: false });
+  };
+
   render() {
     console.log(this.props.phoneNumbers);
     return (
@@ -24,6 +48,7 @@ export default class ContactDetails extends React.Component {
           <View style={styles.actionsContainer}>
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple("#aaa")}
+              onPress={this.decideCaller}
             >
               <View style={styles.actionViews}>
                 <MaterialCommunityIcons
@@ -52,6 +77,9 @@ export default class ContactDetails extends React.Component {
           {this.props.phoneNumbers.map((number) => (
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple("#aaa")}
+              onPress={() => {
+                this.makeCall(number.number);
+              }}
             >
               <View
                 // key={number.id}
@@ -69,6 +97,43 @@ export default class ContactDetails extends React.Component {
             </TouchableNativeFeedback>
           ))}
         </ScrollView>
+
+        <Portal>
+          <Dialog
+            dismissable={true}
+            onDismiss={this._hideDialog}
+            visible={this.state.dialogVisible}
+            onDismiss={this._hideDialog}
+          >
+            <Dialog.Title>CHOOSE NUMBER</Dialog.Title>
+            <Dialog.Content>
+              <View>
+                {this.props.phoneNumbers.map((number) => (
+                  <TouchableNativeFeedback
+                    background={TouchableNativeFeedback.Ripple("#aaa")}
+                    onPress={() => {
+                      this.makeCall(number.number);
+                    }}
+                  >
+                    <View
+                      // key={number.id}
+                      style={{
+                        paddingTop: 0,
+                        height: 70,
+                        // borderWidth: 1,
+                        justifyContent: "center",
+                        paddingLeft: 30,
+                      }}
+                    >
+                      <Text style={{ fontSize: 20 }}>{number.label}</Text>
+                      <Text style={{ color: "#444" }}>{number.number}</Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                ))}
+              </View>
+            </Dialog.Content>
+          </Dialog>
+        </Portal>
       </View>
     );
   }
