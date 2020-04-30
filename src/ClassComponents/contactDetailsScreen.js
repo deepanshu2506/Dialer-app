@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableNativeFeedback,
   ScrollView,
+  Linking,
 } from "react-native";
 import { Surface, Portal, Dialog } from "react-native-paper";
 import { MaterialCommunityIcons, Feather } from "react-native-vector-icons";
@@ -36,6 +37,10 @@ export default class ContactDetails extends React.Component {
     this.setState({ dialogVisible: false });
   };
 
+  openMessenger = () => {
+    Linking.openURL(`sms:${this.props.phoneNumbers[0].number}`);
+  };
+
   render() {
     console.log(this.props.phoneNumbers);
     return (
@@ -61,6 +66,7 @@ export default class ContactDetails extends React.Component {
             </TouchableNativeFeedback>
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple("#aaa")}
+              onPress={this.openMessenger}
             >
               <View style={styles.actionViews}>
                 <MaterialCommunityIcons
