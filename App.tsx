@@ -3,11 +3,14 @@ import { View, PermissionsAndroid, Platform } from "react-native";
 import { Button, BottomNavigation, Text } from "react-native-paper";
 import ContactsPage from "./src/ClassComponents/ContactsPage";
 import DialerPage from "./src/ClassComponents/DialerPage";
+import CallLogPage from "./src/ClassComponents/CallLogPage";
+
 import ContactStore from "./src/utils/ContactsStore";
+import CallLogStore from "./src/utils/CallLogsStore";
 
 export default class App extends React.Component {
   ContactsRoute = () => <ContactsPage permissions={this.state.permissions} />;
-  callLogRoute = () => <Text>Call Logs page</Text>;
+  callLogRoute = () => <CallLogPage />;
   PhoneScreenRoute = () => {
     console.log(this.state);
     return (
@@ -47,11 +50,16 @@ export default class App extends React.Component {
         PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
         PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
         PermissionsAndroid.PERMISSIONS.CALL_PHONE,
+        PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,
       ])
-        .then((result) => {
+        .then(async (result) => {
           this.setState({ permissions: result });
           if (result["android.permission.READ_CONTACTS"] == "granted") {
             ContactStore.init();
+          }
+
+          if (result["android.permission.READ_CALL_LOG"] == "granted") {
+            await CallLogStore.init();
           }
           this.setState({ index: 1 });
         })
