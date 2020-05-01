@@ -19,7 +19,9 @@ export default class CallLog extends React.Component {
     LayoutAnimation.configureNext(
       LayoutAnimation.create(200, "easeInEaseOut", "opacity")
     );
-    this.setState((prevState) => ({ showOptions: !prevState.showOptions }));
+    this.setState((prevState) => ({
+      showOptions: !prevState.showOptions,
+    }));
     console.log("pressed");
   };
   getCallType = () => {
@@ -55,6 +57,17 @@ export default class CallLog extends React.Component {
         .toString()
         .padStart(2, "0")}, ${time}`;
     }
+  };
+
+  makeCall = () => {
+    RNImmediatePhoneCall.immediatePhoneCall(this.props.number);
+    if (this.state.dialogVisible) {
+      this._hideDialog();
+    }
+  };
+
+  openMessenger = () => {
+    Linking.openURL(`sms:${this.props.number}`);
   };
   render() {
     const { type, typeColor } = this.getCallType();
