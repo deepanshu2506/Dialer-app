@@ -133,7 +133,10 @@ export default class CallLog extends React.Component {
             {!this.props.name && (
               <TouchableNativeFeedback
                 background={TouchableNativeFeedback.Ripple("#aaa")}
-                onPress={this.openMessenger}
+                onPress={() => {
+                  console.log(this.props);
+                  this.props.onAddContact(this.props.phoneNumber);
+                }}
               >
                 <View style={styles.actionViews}>
                   <MaterialCommunityIcons
@@ -141,7 +144,7 @@ export default class CallLog extends React.Component {
                     name="account-plus"
                     color={primaryColor}
                   />
-                  <Text>Message</Text>
+                  <Text>Add</Text>
                 </View>
               </TouchableNativeFeedback>
             )}

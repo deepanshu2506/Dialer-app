@@ -40,6 +40,11 @@ export default class AddContactForm extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
+    console.log(this.props);
+    if (this.props.number) {
+      console.log("dfdf");
+      this.setState({ phone: this.props.number }, this.validateForm);
+    }
   }
   componentWillUnmount() {
     this.keyBoardDidShowListener.remove();

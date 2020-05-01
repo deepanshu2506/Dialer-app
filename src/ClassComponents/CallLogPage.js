@@ -10,10 +10,20 @@ import {
 
 import CallLogStore from "../utils/CallLogsStore";
 import CallLog from "./CallLog";
+import AddContactForm from "./AddContactForm";
 
 export default class CallLogPage extends React.Component {
   state = {
     callLogs: [],
+    showAddContactForm: false,
+  };
+
+  showAddContactForm = (number) => {
+    console.log(number);
+    this.setState({ showAddContactForm: true, addNumber: number });
+  };
+  hideAddContactsForm = () => {
+    this.setState({ showAddContactForm: false });
   };
 
   componentDidMount() {
@@ -40,7 +50,11 @@ export default class CallLogPage extends React.Component {
         />
       </View>
     ) : (
-      <View></View>
+      <AddContactForm
+        number={this.state.addNumber}
+        cancel={this.hideAddContactsForm}
+        save={this.handleAddContact}
+      />
     );
   }
 }
