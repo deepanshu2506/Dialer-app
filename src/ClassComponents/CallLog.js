@@ -22,7 +22,6 @@ export default class CallLog extends React.Component {
     this.setState((prevState) => ({
       showOptions: !prevState.showOptions,
     }));
-    console.log("pressed");
   };
   getCallType = () => {
     let typeColor = "";
@@ -224,7 +223,6 @@ const isToday = (someDate) => {
 
 const isYesterday = (someDate) => {
   const today = new Date(new Date() - 86400000);
-  console.log(today);
   return (
     someDate.getDate() == today.getDate() &&
     someDate.getMonth() == today.getMonth() &&

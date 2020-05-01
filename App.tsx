@@ -12,7 +12,6 @@ export default class App extends React.Component {
   ContactsRoute = () => <ContactsPage permissions={this.state.permissions} />;
   callLogRoute = () => <CallLogPage />;
   PhoneScreenRoute = () => {
-    console.log(this.state);
     return (
       <DialerPage
         permissions={this.state.permissions["android.permission.CALL_PHONE"]}

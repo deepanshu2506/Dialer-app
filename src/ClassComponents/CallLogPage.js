@@ -26,9 +26,11 @@ export default class CallLogPage extends React.Component {
     }
   }
 
-  renderCallLog = ({ item }) => <CallLog {...item} />;
+  renderCallLog = ({ item }) => (
+    <CallLog {...item} onAddContact={this.showAddContactForm} />
+  );
   render() {
-    return (
+    return !this.state.showAddContactForm ? (
       <View>
         <FlatList
           style={styles.List}
@@ -37,6 +39,8 @@ export default class CallLogPage extends React.Component {
           keyExtractor={(item) => item.timestamp}
         />
       </View>
+    ) : (
+      <View></View>
     );
   }
 }

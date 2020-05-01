@@ -12,7 +12,6 @@ class CallLogsStore {
       CallLogs.loadAll()
         .then((data) => {
           this.callLogs = data;
-          console.log("store");
           resolve();
         })
         .catch((err) => {
@@ -23,7 +22,6 @@ class CallLogsStore {
   }
 
   getCallLogs() {
-    console.log(this.callLogs);
     return this.callLogs;
   }
 }
